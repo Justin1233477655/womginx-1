@@ -34,7 +34,7 @@
         // fix google search replaceState
         window.history._womginx_replaceState = window.history.replaceState;
         window.history.replaceState = function (stateObj, title, url) {
-            if (window.location.pathname.startsWith("/lesson/https://www.google.com")) {
+            if (window.location.pathname.startsWith("/main/https://www.google.com")) {
                 url = "";
             }
             return this._womginx_replaceState(stateObj, title, url);
@@ -106,6 +106,11 @@
         window._womginx_Blob = window.Blob;
         window.Blob = function (data, options = {}) {
             return new window._womginx_Blob(data, options);
+        };
+        // add websocket origin support
+        window._womginx_WebSocket = window.WebSocket;
+        window.WebSocket = function(url, protocols) {
+            return new window._womginx_WebSocket(url + '?womginx_ws_origin_header=' + dest_scheme + '://' + dest_host, protocols);
         };
         // fix rewriteWorker on instances of "TrustedScriptURL"
         // and also rewrite them and fetch the code using synchronous xhr to rewrite them using client js
@@ -226,7 +231,7 @@
         });
 
         var getProxyUrl = function () {
-            return window.location.href.match(/^https?:\/\/[^\/]+\/lesson(\/[^_\/]+_)?\/(.*)/)[2];
+            return window.location.href.match(/^https?:\/\/[^\/]+\/main(\/[^_\/]+_)?\/(.*)/)[2];
             // return window.location.href;
         };
         // unfortunately, I was not able to find another way of copying the window.location
